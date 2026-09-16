@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 380" width="900" height="380" role="img" aria-label="32GB構成の月額比較">
+	<defs>
+		<linearGradient id="i1" x1="0" y1="1" x2="0" y2="0">
+			<stop offset="0" stop-color="hsl(200,78%,25%)"/>
+			<stop offset="1" stop-color="hsl(200,58%,55%)"/>
+		</linearGradient>
+		<linearGradient id="i2" x1="0" y1="1" x2="0" y2="0">
+			<stop offset="0" stop-color="hsl(140,78%,25%)"/>
+			<stop offset="1" stop-color="hsl(140,58%,55%)"/>
+		</linearGradient>
+		<linearGradient id="i3" x1="0" y1="1" x2="0" y2="0">
+			<stop offset="0" stop-color="hsl(20,78%,25%)"/>
+			<stop offset="1" stop-color="hsl(20,58%,55%)"/>
+		</linearGradient>
+	</defs>
+	<rect width="100%" height="100%" fill="#ffffff"/>
+	<rect width="100%" height="100%" fill="#ffffff"/>
+
+	<text x="10" y="22" font-size="14" font-weight="700" fill="#1c2330">メモリ32GB構成の月額（円換算・横幅＝金額）</text>
+	<text x="10" y="42" font-size="11.5" fill="#4a5568">青＝海外VPS　緑＝国内　橙＝ハイパースケーラー（ディスク・転送は別料金）</text>
+
+	<text x="10" y="76" font-size="12.5" fill="#1c2330">Hetzner CX53</text>
+	<rect x="230" y="62" width="62" height="20" rx="3" fill="url(#i1)"/>
+	<text x="300" y="77" font-size="12" fill="#1c2330">5,500円</text>
+
+	<text x="10" y="106" font-size="12.5" fill="#1c2330">Hetzner CAX41 (ARM)</text>
+	<rect x="230" y="92" width="86" height="20" rx="3" fill="url(#i1)"/>
+	<text x="324" y="107" font-size="12" fill="#1c2330">7,600円</text>
+
+	<text x="10" y="136" font-size="12.5" fill="#1c2330">Lightsail メモリ最適化</text>
+	<rect x="230" y="122" width="258" height="20" rx="3" fill="url(#i3)"/>
+	<text x="496" y="137" font-size="12" fill="#1c2330">22,900円</text>
+
+	<text x="10" y="166" font-size="12.5" fill="#1c2330">Vultr vc2-8c-32gb</text>
+	<rect x="230" y="152" width="286" height="20" rx="3" fill="url(#i1)"/>
+	<text x="524" y="167" font-size="12" fill="#1c2330">25,400円</text>
+
+	<text x="10" y="196" font-size="12.5" fill="#1c2330">さくらVPS 32GB 石狩</text>
+	<rect x="230" y="182" width="297" height="20" rx="3" fill="url(#i2)"/>
+	<text x="535" y="197" font-size="12" fill="#1c2330">26,400円</text>
+
+	<text x="10" y="226" font-size="12.5" fill="#1c2330">ConoHa 48GB</text>
+	<rect x="230" y="212" width="322" height="20" rx="3" fill="url(#i2)"/>
+	<text x="560" y="227" font-size="12" fill="#1c2330">28,600円</text>
+
+	<text x="10" y="256" font-size="12.5" fill="#1c2330">AWS r7i.xlarge 東京</text>
+	<rect x="230" y="242" width="416" height="20" rx="3" fill="url(#i3)"/>
+	<text x="654" y="257" font-size="12" fill="#1c2330">37,000円</text>
+
+	<text x="10" y="286" font-size="12.5" fill="#1c2330">GCP e2-standard-8 東京</text>
+	<rect x="230" y="272" width="449" height="20" rx="3" fill="url(#i3)"/>
+	<text x="687" y="287" font-size="12" fill="#1c2330">39,900円</text>
+
+	<text x="10" y="316" font-size="12.5" fill="#1c2330">Azure D8s v5 東京</text>
+	<rect x="230" y="302" width="648" height="20" rx="3" fill="url(#i3)"/>
+	<text x="700" y="317" font-size="12" fill="#ffffff" font-weight="700">57,600円</text>
+
+	<text x="10" y="346" font-size="12.5" fill="#1c2330">AWS m7i.2xlarge 東京</text>
+	<rect x="230" y="332" width="681" height="20" rx="3" fill="url(#i3)"/>
+	<text x="700" y="347" font-size="12" fill="#ffffff" font-weight="700">60,500円</text>
+
+	<text x="10" y="374" font-size="11.5" fill="#4a5568">※ 橙のハイパースケーラーはここにディスク代と転送代が上乗せされる。青・緑は込み。</text>
+</svg>

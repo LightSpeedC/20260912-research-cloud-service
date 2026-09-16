@@ -1,0 +1,1014 @@
+﻿<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>クラウド環境の比較調査 — 無料枠・32GBメモリ・GPU</title>
+<style>
+:root {
+	--navy1: #12224d;
+	--navy2: #2f5fbf;
+	--ink: #1c2330;
+	--ink-soft: #4a5568;
+	--line: #d9dfe8;
+	--code-bg: #f4f6fa;
+	--link: #1a4fa0;
+	--accent: var(--navy1);
+	--accent2: var(--navy2);
+	--soft: #f2f5fb;
+}
+
+* { box-sizing: border-box; }
+
+body {
+	margin: 0;
+	background: #ffffff;
+	color: var(--ink, #1c2330);
+	font-family: "Segoe UI", "Hiragino Kaku Gothic ProN", "Yu Gothic UI", Meiryo, sans-serif;
+	font-size: 15.5px;
+	line-height: 1.85;
+}
+
+a { color: var(--link, #1a4fa0); }
+
+.titlebar {
+	background: linear-gradient(135deg, var(--navy1, #12224d), var(--navy2, #2f5fbf));
+	color: #ffffff;
+	padding: 34px 30px 30px;
+}
+.titlebar .inner {
+	max-width: 1600px;
+	margin: 0 auto;
+}
+.titlebar h1 {
+	font-size: 1.85em;
+	margin: 0 0 8px;
+	color: #ffffff;
+}
+.titlebar .lead {
+	font-size: 0.95em;
+	color: #d7e2f7;
+	margin: 0 0 6px;
+}
+.titlebar .date {
+	font-size: 0.86em;
+	color: #b9c9e8;
+}
+
+.wrap {
+	max-width: 1600px;
+	margin: 0 auto;
+	padding: 0 30px;
+}
+
+section {
+	padding: 4px 26px 26px;
+	margin: 34px 0;
+	border: 1px solid var(--line, #d9dfe8);
+	border-radius: 10px;
+	background: linear-gradient(180deg, var(--soft, #f2f5fb), #ffffff 260px);
+}
+
+section h1 {
+	background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf));
+	color: #ffffff;
+	font-size: 1.42em;
+	padding: 14px 20px;
+	margin: 26px 0 20px;
+	border-radius: 8px;
+	box-shadow: 0 3px 10px rgba(18, 34, 77, 0.18);
+}
+
+h2 {
+	font-size: 1.16em;
+	background: linear-gradient(90deg, var(--soft, #f2f5fb), #ffffff);
+	color: var(--accent, #12224d);
+	border-left: 6px solid var(--accent, #12224d);
+	padding: 6px 12px;
+	margin: 30px 0 12px;
+	border-radius: 0 6px 6px 0;
+}
+
+h3 {
+	font-size: 1.02em;
+	color: var(--accent, #12224d);
+	background: transparent;
+	border-bottom: 2px dotted var(--accent2, #2f5fbf);
+	display: inline-block;
+	padding-bottom: 3px;
+	margin: 20px 0 8px;
+}
+
+p { margin: 10px 0; }
+ul, ol { margin: 10px 0; padding-left: 1.6em; }
+li { margin: 5px 0; }
+
+code {
+	background: var(--code-bg, #f4f6fa);
+	border: 1px solid var(--line, #d9dfe8);
+	color: #17335f;
+	border-radius: 4px;
+	padding: 1px 5px;
+	font-size: 0.92em;
+}
+
+pre {
+	background: var(--code-bg, #f4f6fa);
+	color: var(--ink, #1c2330);
+	border-left: 5px solid var(--accent2, #2f5fbf);
+	border-radius: 0 6px 6px 0;
+	padding: 13px 16px;
+	overflow-x: auto;
+	font-size: 0.9em;
+	line-height: 1.6;
+}
+pre code { background: none; border: none; padding: 0; }
+
+.tablewrap { overflow-x: auto; margin: 14px 0; }
+
+table {
+	border-collapse: collapse;
+	width: 100%;
+	background: #ffffff;
+	color: var(--ink, #1c2330);
+	border-radius: 8px;
+	overflow: hidden;
+	box-shadow: 0 2px 6px rgba(18, 34, 77, 0.08);
+	font-size: 0.95em;
+}
+th {
+	background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf));
+	color: #ffffff;
+	text-align: left;
+	padding: 9px 12px;
+	white-space: nowrap;
+	font-weight: 700;
+}
+td {
+	background: #ffffff;
+	color: var(--ink, #1c2330);
+	padding: 9px 12px;
+	border-bottom: 1px solid var(--line, #d9dfe8);
+	vertical-align: top;
+}
+tr:nth-child(even) td { background: #fafbfe; }
+td.num { text-align: right; white-space: nowrap; }
+td.nowrap, th.nowrap { white-space: nowrap; }
+
+.badge {
+	display: inline-block;
+	color: #ffffff;
+	border-radius: 4px;
+	padding: 1px 8px;
+	font-size: 0.82em;
+	font-weight: 700;
+	white-space: nowrap;
+	margin-right: 5px;
+	background: linear-gradient(100deg, #5a6472, #97a1ae);
+}
+.b-ok { background: linear-gradient(100deg, #1d7a3c, #45b56c); }
+.b-ng { background: linear-gradient(100deg, #a51f22, #e05a5c); }
+.b-warn { background: linear-gradient(100deg, #b8620a, #f0a548); }
+.b-none { background: linear-gradient(100deg, #5a6472, #97a1ae); }
+
+.callout {
+	border-left: 6px solid var(--accent, #12224d);
+	background: linear-gradient(180deg, var(--soft, #f2f5fb), #ffffff);
+	color: var(--ink, #1c2330);
+	border-radius: 0 8px 8px 0;
+	padding: 12px 18px;
+	margin: 16px 0;
+}
+.callout strong { color: var(--accent, #12224d); }
+.callout code { background: #ffffff; }
+
+.toc {
+	margin: 30px 0 10px;
+}
+.toc h2 {
+	background: linear-gradient(90deg, #f2f5fb, #ffffff);
+	color: var(--navy1, #12224d);
+	border-left-color: var(--navy1, #12224d);
+}
+.toc ol {
+	list-style: none;
+	padding: 0;
+	margin: 14px 0 0;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	counter-reset: tocnum;
+}
+.toc ol li { counter-increment: tocnum; margin: 0; }
+.toc ol a {
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: normal;
+	width: 310px;
+	max-width: 100%;
+	background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf));
+	color: #ffffff;
+	text-decoration: none;
+	font-weight: 700;
+	padding: 9px 14px;
+	border-radius: 7px;
+	line-height: 1.45;
+}
+.toc ol a::before { content: counter(tocnum) ". "; font-weight: 700; }
+
+svg { max-width: 100%; height: auto; display: block; margin: 16px 0; }
+
+footer {
+	max-width: 1600px;
+	margin: 0 auto;
+	padding: 18px 30px 30px;
+	color: var(--ink-soft, #4a5568);
+	background: transparent;
+	border-top: 1px solid var(--line, #d9dfe8);
+}
+
+.homelink {
+	display: inline-block;
+	background: linear-gradient(100deg, var(--navy1, #12224d), var(--navy2, #2f5fbf));
+	color: #ffffff;
+	text-decoration: none;
+	padding: 0 9px;
+	border-radius: 6px;
+	line-height: 1.9;
+}
+.homelink svg { vertical-align: -3px; }
+.navtop { margin: 26px 0 0; }
+
+.ch01 { --accent: hsl(280, 78%, 25%); --accent2: hsl(280, 58%, 55%); --soft: hsl(280, 28%, 95%); }
+.ch02 { --accent: hsl(186.7, 78%, 25%); --accent2: hsl(186.7, 58%, 55%); --soft: hsl(186.7, 28%, 95%); }
+.ch03 { --accent: hsl(93.3, 78%, 25%); --accent2: hsl(93.3, 58%, 55%); --soft: hsl(93.3, 28%, 95%); }
+.ch04 { --accent: hsl(0, 78%, 25%); --accent2: hsl(0, 58%, 55%); --soft: hsl(0, 28%, 95%); }
+</style>
+</head>
+<body>
+
+<div class="titlebar">
+	<div class="inner">
+		<h1>クラウド環境の比較調査 — 無料枠・32GBメモリ・GPU</h1>
+		<p class="lead">GCP / AWS / Azure / Oracle Cloud / さくら / 国内VPS / 海外格安VPS / GPU専業クラウドを対象に、無料枠の条件・メモリ32GB構成の価格・GPU付きインスタンスの価格を横並びにした。</p>
+		<div class="date">📅 作成: 2026-09-12 / 更新: 2026-09-17</div>
+	</div>
+</div>
+
+<div class="wrap">
+
+<p class="navtop"><a class="homelink" href="../" aria-label="親サイトへ戻る"><svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M8 1.6 0.8 7.4h2V14h4v-3.8h2.4V14h4V7.4h2L8 1.6z"/></svg></a></p>
+
+<nav class="toc">
+	<h2>目次</h2>
+	<ol>
+		<li class="ch01"><a href="#ch01">無料枠で使えるもの</a></li>
+		<li class="ch02"><a href="#ch02">メモリ32GB構成の価格比較</a></li>
+		<li class="ch03"><a href="#ch03">GPU付きインスタンスの価格比較</a></li>
+		<li class="ch04"><a href="#ch04">用途別の選び方と注意点</a></li>
+	</ol>
+</nav>
+
+<section class="ch01" id="ch01">
+<h1>無料枠で使えるもの</h1>
+
+<p>2026年時点で「無期限で無料のVM」を出しているのは <strong>Oracle Cloud</strong> と <strong>Google Cloud</strong> の2社だけである。AWS と Azure は期間限定のクレジット方式に寄っている。</p>
+
+<div class="callout">
+<p><strong>AWSの無料枠は2025年7月15日に作り替えられた。</strong>新規アカウントでは「EC2 750時間/月を12ヶ月」という従来の枠は<strong>もう使えない</strong>。$100のクレジット（オンボーディング5課題の達成で最大$200）を<strong>6ヶ月</strong>で使い切る方式に変わっている。12ヶ月無料が残っているのは2025年7月15日より前に作ったアカウントだけ。</p>
+</div>
+
+<h2>無料枠の一覧</h2>
+
+<div class="tablewrap">
+<table>
+<thead>
+<tr>
+	<th class="nowrap">事業者</th>
+	<th class="nowrap">種類</th>
+	<th class="nowrap">期間</th>
+	<th>スペック・条件</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td class="nowrap">Oracle Cloud</td>
+	<td class="nowrap"><span class="badge b-ok">無期限</span>Always Free</td>
+	<td class="nowrap">無期限</td>
+	<td>Ampere A1（ARM）<strong>2 OCPU / メモリ12GB</strong>（1,500 OCPU時間 + 9,000 GB時間/月）。加えて AMD の <code>VM.Standard.E2.1.Micro</code>（1/8 OCPU・1GB）を2台。ブロックストレージ合計200GB、下り10TB/月。ホームリージョンのみ。</td>
+</tr>
+<tr>
+	<td class="nowrap">Google Cloud</td>
+	<td class="nowrap"><span class="badge b-ok">無期限</span>Always Free</td>
+	<td class="nowrap">無期限</td>
+	<td><code>e2-micro</code> 1台（0.25〜2 vCPUバースト / メモリ1GB）。<strong>us-west1・us-central1・us-east1 のみ</strong>。標準永続ディスク30GB、北米からの下り1GB/月。</td>
+</tr>
+<tr>
+	<td class="nowrap">Google Cloud</td>
+	<td class="nowrap"><span class="badge b-warn">期間限定</span>無料トライアル</td>
+	<td class="nowrap">90日</td>
+	<td>$300クレジット。過去にGoogle Cloud / Maps Platform / Firebase の有料ユーザーだったことがないアカウントのみ。</td>
+</tr>
+<tr>
+	<td class="nowrap">AWS</td>
+	<td class="nowrap"><span class="badge b-warn">期間限定</span>Free Plan（新方式）</td>
+	<td class="nowrap">6ヶ月</td>
+	<td>$100クレジット。EC2の起動と終了・RDS構成・Lambdaデプロイ・Bedrockのプロンプト試行・Budgets設定の5課題で追加$100。クレジットを使い切るか6ヶ月が過ぎるとアカウントが閉じる（Free Planでは超過課金は発生しない）。30以上の「常に無料」サービスは別途あり。</td>
+</tr>
+<tr>
+	<td class="nowrap">AWS</td>
+	<td class="nowrap"><span class="badge b-ok">実質VM</span>T4g無料トライアル</td>
+	<td class="nowrap">2026-12-31まで</td>
+	<td><code>t4g.small</code>（ARM 2vCPU / 2GB）を<strong>750時間/月</strong>。全リージョン合算。新規・既存を問わず全アカウントが対象。超過分のCPUクレジットは課金される。繰り越し不可。</td>
+</tr>
+<tr>
+	<td class="nowrap">Azure</td>
+	<td class="nowrap"><span class="badge b-warn">期間限定</span>無料アカウント</td>
+	<td class="nowrap">30日 + 12ヶ月</td>
+	<td>最初の30日は$200クレジット（未使用分は消滅）。以降12ヶ月は <code>B1S</code>・<code>B2pts v2</code>（ARM）・<code>B2ats v2</code>（AMD）を合計<strong>750時間/月</strong>。リージョンの制限はなく、750時間の範囲なら複数台に割ってもよい。</td>
+</tr>
+<tr>
+	<td class="nowrap">さくらのVPS</td>
+	<td class="nowrap"><span class="badge b-warn">お試し</span>無料お試し</td>
+	<td class="nowrap">2週間</td>
+	<td>全プランが対象。同時2台まで、お試し中は下り帯域10Mbpsに制限。クレジットカード登録が必要。</td>
+</tr>
+<tr>
+	<td class="nowrap">その他の国内VPS</td>
+	<td class="nowrap"><span class="badge b-none">なし</span></td>
+	<td class="nowrap">—</td>
+	<td>ConoHa VPS・Xserver VPS に常設の無料枠はない。キャンペーンによる割引のみ。</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<h2>無料で使える期間の比較</h2>
+
+<svg viewBox="0 0 900 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="無料枠の期間の比較図">
+	<defs>
+		<linearGradient id="g-r01-1a" x1="0" y1="1" x2="0" y2="0">
+			<stop offset="0" stop-color="hsl(140,78%,25%)"/>
+			<stop offset="1" stop-color="hsl(140,58%,55%)"/>
+		</linearGradient>
+		<linearGradient id="g-r01-1b" x1="0" y1="1" x2="0" y2="0">
+			<stop offset="0" stop-color="hsl(30,78%,25%)"/>
+			<stop offset="1" stop-color="hsl(30,58%,55%)"/>
+		</linearGradient>
+		<linearGradient id="g-r01-1c" x1="0" y1="1" x2="0" y2="0">
+			<stop offset="0" stop-color="hsl(0,78%,25%)"/>
+			<stop offset="1" stop-color="hsl(0,58%,55%)"/>
+		</linearGradient>
+	</defs>
+	<rect width="100%" height="100%" fill="#ffffff"/>
+
+	<text x="10" y="22" font-size="14" font-weight="700" fill="#1c2330">無料で使える期間（横幅＝期間の長さ）</text>
+
+	<text x="10" y="63" font-size="13" fill="#1c2330">Oracle A1 2C/12GB</text>
+	<rect x="190" y="48" width="690" height="24" rx="4" fill="url(#g-r01-1a)"/>
+	<text x="204" y="65" font-size="12.5" fill="#ffffff" font-weight="700">無期限（Always Free）</text>
+
+	<text x="10" y="103" font-size="13" fill="#1c2330">GCP e2-micro 1GB</text>
+	<rect x="190" y="88" width="690" height="24" rx="4" fill="url(#g-r01-1a)"/>
+	<text x="204" y="105" font-size="12.5" fill="#ffffff" font-weight="700">無期限（Always Free）</text>
+
+	<text x="10" y="143" font-size="13" fill="#1c2330">AWS t4g.small 2GB</text>
+	<rect x="190" y="128" width="330" height="24" rx="4" fill="url(#g-r01-1b)"/>
+	<text x="204" y="145" font-size="12.5" fill="#ffffff" font-weight="700">2026-12-31 まで</text>
+
+	<text x="10" y="183" font-size="13" fill="#1c2330">Azure B2pts v2 4GB</text>
+	<rect x="190" y="168" width="300" height="24" rx="4" fill="url(#g-r01-1b)"/>
+	<text x="204" y="185" font-size="12.5" fill="#ffffff" font-weight="700">12ヶ月</text>
+
+	<text x="10" y="223" font-size="13" fill="#1c2330">AWS $100〜200</text>
+	<rect x="190" y="208" width="150" height="24" rx="4" fill="url(#g-r01-1c)"/>
+	<text x="204" y="225" font-size="12.5" fill="#ffffff" font-weight="700">6ヶ月</text>
+
+	<text x="10" y="263" font-size="13" fill="#1c2330">GCP $300</text>
+	<rect x="190" y="248" width="76" height="24" rx="4" fill="url(#g-r01-1c)"/>
+	<text x="272" y="265" font-size="12.5" fill="#1c2330">90日</text>
+
+	<text x="10" y="293" font-size="11.5" fill="#4a5568">※ 緑＝無期限、橙＝1年前後、赤＝短期。Azureの$200/30日とさくらの2週間お試しは図から省いた。</text>
+</svg>
+
+<div class="callout">
+<p><strong>Oracle Cloud の無料枠は2026年6月15日に半減した。</strong>Ampere A1 が 4 OCPU / 24GB → <strong>2 OCPU / 12GB</strong> に変わっている。告知はなくドキュメントが書き換わっただけで、既存の 4 OCPU 構成を動かし続けていた利用者は停止や課金に直面した。「無料で24GB」という2025年以前の情報を見て設計すると外れる。</p>
+</div>
+
+<h2>無料枠でメモリ32GBは賄えるか</h2>
+
+<p><strong>賄えない。</strong>無期限の無料枠で最大なのは Oracle Cloud の 12GB で、目標の32GBには届かない。AWS・Azure のクレジットは金額で消えるため、32GBのインスタンスを常時起動すると数週間から1ヶ月程度で尽きる。</p>
+
+<div class="tablewrap">
+<table>
+<thead>
+<tr><th>クレジット</th><th class="nowrap">金額</th><th>32GB機を常時起動した場合の目安</th></tr>
+</thead>
+<tbody>
+<tr><td>AWS Free Plan</td><td class="num">$100〜200</td><td>東京の <code>m7i.2xlarge</code>（$0.521/時）なら<strong>約8〜16日</strong>で尽きる</td></tr>
+<tr><td>GCP 無料トライアル</td><td class="num">$300</td><td>東京の <code>e2-standard-8</code>（$0.344/時）なら<strong>約36日</strong>（90日の期限より先にクレジットが尽きる）</td></tr>
+<tr><td>Azure 無料アカウント</td><td class="num">$200</td><td>東京の <code>D8s v5</code>（$0.496/時）なら<strong>約17日</strong>（30日の期限より先に尽きる）</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>無料枠の使いどころは、32GB機の本番運用ではなく「検証用の踏み台」「監視・cron の常駐先」「短期のPoC」に限られる。</p>
+
+</section>
+
+<section class="ch02" id="ch02">
+<h1>メモリ32GB構成の価格比較</h1>
+
+<p>ここが本題である。<strong>結論から言うと、同じ32GBでも月あたり5,500円から60,000円まで10倍以上の開きがある。</strong>この差は性能差というより課金モデルの差で、ハイパースケーラー（AWS/GCP/Azure）は時間課金・ディスク別・転送量別、VPS系は定額・ディスク込み・転送込みという違いが効いている。</p>
+
+<div class="callout">
+<p><strong>為替は $1 = 159円 / €1 = 185円 で換算した</strong>（2026年9月初旬の水準）。ドル建て・ユーロ建てのサービスは為替で±10%程度は簡単に動くので、円換算は目安として読むこと。ハイパースケーラーの月額は <strong>730時間/月</strong>で計算している。</p>
+</div>
+
+<h2>ハイパースケーラー（東京リージョン・オンデマンド）</h2>
+
+<div class="tablewrap">
+<table>
+<thead>
+<tr>
+	<th class="nowrap">事業者</th>
+	<th class="nowrap">インスタンス</th>
+	<th class="nowrap">vCPU</th>
+	<th class="nowrap">メモリ</th>
+	<th class="nowrap">$/時</th>
+	<th class="nowrap">$/月</th>
+	<th class="nowrap">円/月</th>
+	<th>備考</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td class="nowrap">AWS</td><td class="nowrap"><code>r7i.xlarge</code></td>
+	<td class="num">4</td><td class="num">32GB</td>
+	<td class="num">0.319</td><td class="num">233</td><td class="num">37,000</td>
+	<td>メモリ最適化。32GBを最も安く得る構成</td>
+</tr>
+<tr>
+	<td class="nowrap">GCP</td><td class="nowrap"><code>e2-standard-8</code></td>
+	<td class="num">8</td><td class="num">32GB</td>
+	<td class="num">0.344</td><td class="num">251</td><td class="num">39,900</td>
+	<td>共有コア寄りの汎用。3社の8vCPU機で最安</td>
+</tr>
+<tr>
+	<td class="nowrap">AWS</td><td class="nowrap"><code>m7g.2xlarge</code></td>
+	<td class="num">8</td><td class="num">32GB</td>
+	<td class="num">0.422</td><td class="num">308</td><td class="num">49,000</td>
+	<td>Graviton（ARM）。x86版より約19%安い</td>
+</tr>
+<tr>
+	<td class="nowrap">AWS</td><td class="nowrap"><code>t3.2xlarge</code></td>
+	<td class="num">8</td><td class="num">32GB</td>
+	<td class="num">0.435</td><td class="num">318</td><td class="num">50,500</td>
+	<td>バースト型。CPUを回し続ける用途には不向き</td>
+</tr>
+<tr>
+	<td class="nowrap">GCP</td><td class="nowrap"><code>n2-standard-8</code></td>
+	<td class="num">8</td><td class="num">32GB</td>
+	<td class="num">0.498</td><td class="num">291</td><td class="num">46,300</td>
+	<td>月額は継続利用割引（最大20%）込みの実効値</td>
+</tr>
+<tr>
+	<td class="nowrap">Azure</td><td class="nowrap"><code>D8s v5</code></td>
+	<td class="num">8</td><td class="num">32GB</td>
+	<td class="num">0.496</td><td class="num">362</td><td class="num">57,600</td>
+	<td>1年予約で $0.306/時（約38%引き）</td>
+</tr>
+<tr>
+	<td class="nowrap">AWS</td><td class="nowrap"><code>m7i.2xlarge</code></td>
+	<td class="num">8</td><td class="num">32GB</td>
+	<td class="num">0.521</td><td class="num">380</td><td class="num">60,500</td>
+	<td>Intel汎用。東京は us-east-1 より29%高い</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<p>いずれも<strong>OSディスクとデータ転送は別料金</strong>である。100GBのSSDを付けると月$10〜20、外向き転送は1GBあたり$0.08〜0.114（東京）かかる。上表に数千円を上乗せして考える必要がある。</p>
+
+<h3>米国リージョンなら3割安い</h3>
+
+<p>レイテンシを許容できるなら米国が明確に安い。東京との差はおおむね28〜29%で、3社ともほぼ同じ比率である。</p>
+
+<div class="tablewrap">
+<table>
+<thead>
+<tr><th class="nowrap">インスタンス</th><th class="nowrap">米国 $/時</th><th class="nowrap">東京 $/時</th><th class="nowrap">差</th><th class="nowrap">米国 円/月</th></tr>
+</thead>
+<tbody>
+<tr><td class="nowrap">AWS <code>r7i.xlarge</code></td><td class="num">0.265</td><td class="num">0.319</td><td class="num">+20%</td><td class="num">30,700</td></tr>
+<tr><td class="nowrap">GCP <code>e2-standard-8</code></td><td class="num">0.268</td><td class="num">0.344</td><td class="num">+28%</td><td class="num">31,100</td></tr>
+<tr><td class="nowrap">AWS <code>m7g.2xlarge</code></td><td class="num">0.326</td><td class="num">0.422</td><td class="num">+29%</td><td class="num">37,800</td></tr>
+<tr><td class="nowrap">Azure <code>D8s v5</code></td><td class="num">0.384</td><td class="num">0.496</td><td class="num">+29%</td><td class="num">44,600</td></tr>
+<tr><td class="nowrap">AWS <code>m7i.2xlarge</code></td><td class="num">0.403</td><td class="num">0.521</td><td class="num">+29%</td><td class="num">46,800</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2>VPS・定額系（ディスク・転送込み）</h2>
+
+<div class="tablewrap">
+<table>
+<thead>
+<tr>
+	<th class="nowrap">事業者・プラン</th>
+	<th class="nowrap">vCPU</th>
+	<th class="nowrap">メモリ</th>
+	<th class="nowrap">ストレージ</th>
+	<th class="nowrap">月額（原価）</th>
+	<th class="nowrap">円/月</th>
+	<th>備考</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td class="nowrap">Hetzner <code>CX53</code></td>
+	<td class="num">16</td><td class="num">32GB</td><td class="num">320GB</td>
+	<td class="num">€29.49</td><td class="num">5,500</td>
+	<td><span class="badge b-warn">要確認</span>共有vCPU。転送20TB込み。EU/シンガポール。新規提供が停止している可能性あり（後述）</td>
+</tr>
+<tr>
+	<td class="nowrap">Hetzner <code>CAX41</code></td>
+	<td class="num">16</td><td class="num">32GB</td><td class="num">320GB</td>
+	<td class="num">€40.99</td><td class="num">7,600</td>
+	<td><span class="badge b-warn">要確認</span>ARM（Ampere）。同上</td>
+</tr>
+<tr>
+	<td class="nowrap">AWS Lightsail メモリ最適化</td>
+	<td class="num">4</td><td class="num">32GB</td><td class="num">320GB</td>
+	<td class="num">$144</td><td class="num">22,900</td>
+	<td>転送6TB込み。2026-02-02提供開始。EC2と同じAWS網</td>
+</tr>
+<tr>
+	<td class="nowrap">さくらのVPS 32GB（石狩）</td>
+	<td class="num">10</td><td class="num">32GB</td><td class="num">1,600GB</td>
+	<td class="num">26,400円</td><td class="num">26,400</td>
+	<td><span class="badge b-ok">国内</span>年額一括なら実質24,200円/月。SLAあり。2週間お試しあり</td>
+</tr>
+<tr>
+	<td class="nowrap">Hetzner <code>CCX33</code></td>
+	<td class="num">8</td><td class="num">32GB</td><td class="num">240GB</td>
+	<td class="num">€138.49</td><td class="num">25,600</td>
+	<td><span class="badge b-ng">値上げ</span>専有vCPU。2026-06-15に €62.49 → €138.49（2.2倍）</td>
+</tr>
+<tr>
+	<td class="nowrap">Vultr <code>vc2-8c-32gb</code></td>
+	<td class="num">8</td><td class="num">32GB</td><td class="num">640GB</td>
+	<td class="num">$160</td><td class="num">25,400</td>
+	<td>Regular Performance。転送6TB込み</td>
+</tr>
+<tr>
+	<td class="nowrap">Vultr <code>voc-m-4c-32gb-200s</code></td>
+	<td class="num">4</td><td class="num">32GB</td><td class="num">200GB</td>
+	<td class="num">$160</td><td class="num">25,400</td>
+	<td>Optimized（メモリ最適化）。専有CPU</td>
+</tr>
+<tr>
+	<td class="nowrap">AWS Lightsail 汎用</td>
+	<td class="num">8</td><td class="num">32GB</td><td class="num">640GB</td>
+	<td class="num">$164</td><td class="num">26,100</td>
+	<td>転送7TB込み</td>
+</tr>
+<tr>
+	<td class="nowrap">さくらのVPS 32GB（東京）</td>
+	<td class="num">10</td><td class="num">32GB</td><td class="num">1,600GB</td>
+	<td class="num">30,800円</td><td class="num">30,800</td>
+	<td><span class="badge b-ok">国内</span>年額一括で実質28,234円/月。大阪は28,600円/月</td>
+</tr>
+<tr>
+	<td class="nowrap">Vultr <code>vhf-8c-32gb</code></td>
+	<td class="num">8</td><td class="num">32GB</td><td class="num">512GB</td>
+	<td class="num">$192</td><td class="num">30,500</td>
+	<td>High Frequency。高クロック＋NVMe</td>
+</tr>
+<tr>
+	<td class="nowrap">ConoHa VPS 48GB</td>
+	<td class="num">12</td><td class="num">48GB</td><td class="num">100GB</td>
+	<td class="num">28,600円</td><td class="num">28,600</td>
+	<td><span class="badge b-ok">国内</span>32GBプランは48GBへ統合済み。時間課金53.3円/時。長期割引（VPS割引きっぷ）あり</td>
+</tr>
+<tr>
+	<td class="nowrap">さくらのクラウド 8コア32GB</td>
+	<td class="num">8</td><td class="num">32GB</td><td class="num">別料金</td>
+	<td class="num">29,040円〜</td><td class="num">29,040〜</td>
+	<td><span class="badge b-ok">国内</span>ゾーンにより29,040〜37,950円。ディスクは別課金だが<strong>転送量課金がない</strong></td>
+</tr>
+<tr>
+	<td class="nowrap">Vultr <code>voc-g-8c-32gb-160s</code></td>
+	<td class="num">8</td><td class="num">32GB</td><td class="num">160GB</td>
+	<td class="num">$240</td><td class="num">38,200</td>
+	<td>Optimized（汎用）。専有CPU</td>
+</tr>
+<tr>
+	<td class="nowrap">Xserver VPS 32GB</td>
+	<td class="num">12</td><td class="num">32GB</td><td class="num">1,600GB</td>
+	<td class="num">53,020円</td><td class="num">53,020</td>
+	<td><span class="badge b-ng">停止中</span>36ヶ月契約で46,200円/月。新規受付が停止している</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<h2>月額レンジの俯瞰</h2>
+
+<svg viewBox="0 0 900 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="32GB構成の月額比較">
+	<defs>
+		<linearGradient id="g-r02-1a" x1="0" y1="1" x2="0" y2="0">
+			<stop offset="0" stop-color="hsl(200,78%,25%)"/>
+			<stop offset="1" stop-color="hsl(200,58%,55%)"/>
+		</linearGradient>
+		<linearGradient id="g-r02-1b" x1="0" y1="1" x2="0" y2="0">
+			<stop offset="0" stop-color="hsl(140,78%,25%)"/>
+			<stop offset="1" stop-color="hsl(140,58%,55%)"/>
+		</linearGradient>
+		<linearGradient id="g-r02-1c" x1="0" y1="1" x2="0" y2="0">
+			<stop offset="0" stop-color="hsl(20,78%,25%)"/>
+			<stop offset="1" stop-color="hsl(20,58%,55%)"/>
+		</linearGradient>
+	</defs>
+	<rect width="100%" height="100%" fill="#ffffff"/>
+
+	<text x="10" y="22" font-size="14" font-weight="700" fill="#1c2330">メモリ32GB構成の月額（円換算・横幅＝金額）</text>
+	<text x="10" y="42" font-size="11.5" fill="#4a5568">青＝海外VPS　緑＝国内　橙＝ハイパースケーラー（ディスク・転送は別料金）</text>
+
+	<text x="10" y="76" font-size="12.5" fill="#1c2330">Hetzner CX53</text>
+	<rect x="230" y="62" width="62" height="20" rx="3" fill="url(#g-r02-1a)"/>
+	<text x="300" y="77" font-size="12" fill="#1c2330">5,500円</text>
+
+	<text x="10" y="106" font-size="12.5" fill="#1c2330">Hetzner CAX41 (ARM)</text>
+	<rect x="230" y="92" width="86" height="20" rx="3" fill="url(#g-r02-1a)"/>
+	<text x="324" y="107" font-size="12" fill="#1c2330">7,600円</text>
+
+	<text x="10" y="136" font-size="12.5" fill="#1c2330">Lightsail メモリ最適化</text>
+	<rect x="230" y="122" width="258" height="20" rx="3" fill="url(#g-r02-1c)"/>
+	<text x="496" y="137" font-size="12" fill="#1c2330">22,900円</text>
+
+	<text x="10" y="166" font-size="12.5" fill="#1c2330">Vultr vc2-8c-32gb</text>
+	<rect x="230" y="152" width="286" height="20" rx="3" fill="url(#g-r02-1a)"/>
+	<text x="524" y="167" font-size="12" fill="#1c2330">25,400円</text>
+
+	<text x="10" y="196" font-size="12.5" fill="#1c2330">さくらVPS 32GB 石狩</text>
+	<rect x="230" y="182" width="297" height="20" rx="3" fill="url(#g-r02-1b)"/>
+	<text x="535" y="197" font-size="12" fill="#1c2330">26,400円</text>
+
+	<text x="10" y="226" font-size="12.5" fill="#1c2330">ConoHa 48GB</text>
+	<rect x="230" y="212" width="322" height="20" rx="3" fill="url(#g-r02-1b)"/>
+	<text x="560" y="227" font-size="12" fill="#1c2330">28,600円</text>
+
+	<text x="10" y="256" font-size="12.5" fill="#1c2330">AWS r7i.xlarge 東京</text>
+	<rect x="230" y="242" width="416" height="20" rx="3" fill="url(#g-r02-1c)"/>
+	<text x="654" y="257" font-size="12" fill="#1c2330">37,000円</text>
+
+	<text x="10" y="286" font-size="12.5" fill="#1c2330">GCP e2-standard-8 東京</text>
+	<rect x="230" y="272" width="449" height="20" rx="3" fill="url(#g-r02-1c)"/>
+	<text x="687" y="287" font-size="12" fill="#1c2330">39,900円</text>
+
+	<text x="10" y="316" font-size="12.5" fill="#1c2330">Azure D8s v5 東京</text>
+	<rect x="230" y="302" width="648" height="20" rx="3" fill="url(#g-r02-1c)"/>
+	<text x="700" y="317" font-size="12" fill="#ffffff" font-weight="700">57,600円</text>
+
+	<text x="10" y="346" font-size="12.5" fill="#1c2330">AWS m7i.2xlarge 東京</text>
+	<rect x="230" y="332" width="681" height="20" rx="3" fill="url(#g-r02-1c)"/>
+	<text x="700" y="347" font-size="12" fill="#ffffff" font-weight="700">60,500円</text>
+
+	<text x="10" y="374" font-size="11.5" fill="#4a5568">※ 橙のハイパースケーラーはここにディスク代と転送代が上乗せされる。青・緑は込み。</text>
+</svg>
+
+<div class="callout">
+<p><strong>Hetzner は2026年に2度の値上げがあり、情報が錯綜している。</strong>専有vCPUの <code>CCX33</code> は €62.49 → €138.49 と2.2倍になった。さらに複数の比較サイトが「2026-09-04 時点で共有vCPUの CX/CAX 系が新規提供停止」と報じている。<strong>この停止情報は裏が取れていないため、Hetzner を候補にするなら公式サイトで在庫と価格を直接確認すること。</strong>安さを当てにして設計すると、契約時に選べない可能性がある。</p>
+</div>
+
+<h2>長期契約・予約による割引</h2>
+
+<div class="tablewrap">
+<table>
+<thead>
+<tr><th class="nowrap">事業者</th><th>割引の形</th><th class="nowrap">割引率の目安</th><th>例</th></tr>
+</thead>
+<tbody>
+<tr><td class="nowrap">GCP</td><td>確約利用割引（1年/3年）</td><td class="num">21% / 44%</td><td><code>e2-standard-8</code> 東京: $251 → $158（1年）→ $113（3年）/月</td></tr>
+<tr><td class="nowrap">Azure</td><td>予約インスタンス（1年）</td><td class="num">約38%</td><td><code>D8s v5</code> 東京: $0.496 → $0.306/時</td></tr>
+<tr><td class="nowrap">GCP</td><td>Spot（中断あり）</td><td class="num">40〜72%</td><td><code>n2-standard-8</code> 東京: $0.498 → $0.137/時</td></tr>
+<tr><td class="nowrap">さくらのVPS</td><td>年額一括</td><td class="num">約8%（1ヶ月分無料）</td><td>32GB石狩: 26,400 → 24,200円/月相当</td></tr>
+<tr><td class="nowrap">Xserver VPS</td><td>36ヶ月契約</td><td class="num">約13%</td><td>32GB: 53,020 → 46,200円/月相当</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>止まっても構わないバッチ処理なら、GCPのSpotが圧倒的に安い。東京の <code>n2-standard-8</code>（8vCPU/32GB）が $0.137/時 = <strong>月15,900円相当</strong>まで落ちる。</p>
+
+</section>
+
+<section class="ch03" id="ch03">
+<h1>GPU付きインスタンスの価格比較</h1>
+
+<p><strong>GPUに無料枠はない。</strong>Oracle Cloud の Always Free にもGPUは含まれない。そして GPU の価格差は32GBメモリ以上に激しく、<strong>同じ H100 でも $1.89/時 から $6.98/時 まで3.7倍の開きがある。</strong></p>
+
+<h2>GPU専業クラウド（安い）</h2>
+
+<div class="tablewrap">
+<table>
+<thead>
+<tr>
+	<th class="nowrap">事業者</th>
+	<th class="nowrap">GPU</th>
+	<th class="nowrap">VRAM</th>
+	<th class="nowrap">vCPU / RAM</th>
+	<th class="nowrap">$/時</th>
+	<th class="nowrap">円/時</th>
+	<th>備考</th>
+</tr>
+</thead>
+<tbody>
+<tr><td class="nowrap">Vast.ai</td><td class="nowrap">RTX 4090</td><td class="num">24GB</td><td class="nowrap">ホスト依存</td><td class="num">0.31〜</td><td class="num">49〜</td><td>マーケットプレイス。中断可なら$0.09/時から</td></tr>
+<tr><td class="nowrap">RunPod</td><td class="nowrap">L4</td><td class="num">24GB</td><td class="nowrap">12 / 50GB</td><td class="num">0.49</td><td class="num">78</td><td>秒単位課金</td></tr>
+<tr><td class="nowrap">RunPod</td><td class="nowrap">RTX A6000</td><td class="num">48GB</td><td class="nowrap">9 / 50GB</td><td class="num">0.53</td><td class="num">84</td><td>VRAM単価が最も良い</td></tr>
+<tr><td class="nowrap">Vast.ai</td><td class="nowrap">A100 80GB</td><td class="num">80GB</td><td class="nowrap">ホスト依存</td><td class="num">0.67〜</td><td class="num">107〜</td><td>信頼性はホスト次第でばらつく</td></tr>
+<tr><td class="nowrap">RunPod</td><td class="nowrap">RTX 4090</td><td class="num">24GB</td><td class="nowrap">6 / 41GB</td><td class="num">0.74</td><td class="num">118</td><td></td></tr>
+<tr><td class="nowrap">RunPod</td><td class="nowrap">L40S</td><td class="num">48GB</td><td class="nowrap">16 / 94GB</td><td class="num">1.09</td><td class="num">173</td><td></td></tr>
+<tr><td class="nowrap">Lambda</td><td class="nowrap">A100 40GB (8枚)</td><td class="num">40GB</td><td class="nowrap">240 / 1800GB</td><td class="num">1.99</td><td class="num">316</td><td>GPU1枚あたりの単価</td></tr>
+<tr><td class="nowrap">RunPod</td><td class="nowrap">A100 80GB</td><td class="num">80GB</td><td class="nowrap">16 / 125GB</td><td class="num">1.59</td><td class="num">253</td><td>SXM / PCIe とも同額</td></tr>
+<tr><td class="nowrap">Vast.ai</td><td class="nowrap">H100</td><td class="num">80GB</td><td class="nowrap">ホスト依存</td><td class="num">1.89〜</td><td class="num">301〜</td><td>検証済みホストは $2.21 前後</td></tr>
+<tr><td class="nowrap">Lambda</td><td class="nowrap">GH200</td><td class="num">96GB</td><td class="nowrap">1枚構成</td><td class="num">2.29</td><td class="num">364</td><td></td></tr>
+<tr><td class="nowrap">RunPod</td><td class="nowrap">H100 PCIe</td><td class="num">80GB</td><td class="nowrap">16 / 188GB</td><td class="num">2.89</td><td class="num">460</td><td></td></tr>
+<tr><td class="nowrap">RunPod</td><td class="nowrap">H100 SXM</td><td class="num">80GB</td><td class="nowrap">20 / 125GB</td><td class="num">3.49</td><td class="num">555</td><td></td></tr>
+<tr><td class="nowrap">Lambda</td><td class="nowrap">H100 SXM (8枚)</td><td class="num">80GB</td><td class="nowrap">208 / 1800GB</td><td class="num">3.99</td><td class="num">634</td><td>GPU1枚あたり。8枚で $31.92/時</td></tr>
+<tr><td class="nowrap">Lambda</td><td class="nowrap">B200 SXM6 (8枚)</td><td class="num">180GB</td><td class="nowrap">208 / 2900GB</td><td class="num">6.69</td><td class="num">1,064</td><td>GPU1枚あたり</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2>ハイパースケーラー（高い）</h2>
+
+<div class="tablewrap">
+<table>
+<thead>
+<tr>
+	<th class="nowrap">事業者</th>
+	<th class="nowrap">インスタンス</th>
+	<th class="nowrap">GPU</th>
+	<th class="nowrap">vCPU / RAM</th>
+	<th class="nowrap">米国 $/時</th>
+	<th class="nowrap">東京 $/時</th>
+	<th>備考</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td class="nowrap">GCP</td><td class="nowrap"><code>g2-standard-4</code></td><td class="nowrap">L4 ×1</td>
+	<td class="nowrap">4 / 16GB</td><td class="num">0.707</td><td class="num">0.908</td>
+	<td>Spotなら $0.424 / $0.545</td>
+</tr>
+<tr>
+	<td class="nowrap">AWS</td><td class="nowrap"><code>g6.xlarge</code></td><td class="nowrap">L4 ×1</td>
+	<td class="nowrap">4 / 16GB</td><td class="num">0.805</td><td class="num">1.167</td>
+	<td>東京は月約$852</td>
+</tr>
+<tr>
+	<td class="nowrap">AWS</td><td class="nowrap"><code>g5.xlarge</code></td><td class="nowrap">A10G ×1</td>
+	<td class="nowrap">4 / 16GB</td><td class="num">1.006</td><td class="num">1.459</td>
+	<td>東京は月約$1,065</td>
+</tr>
+<tr>
+	<td class="nowrap">Azure</td><td class="nowrap"><code>NC24ads A100 v4</code></td><td class="nowrap">A100 80GB ×1</td>
+	<td class="nowrap">24 / 220GB</td><td class="num">3.673</td><td class="num">5.326</td>
+	<td>Spotは米国 $0.679（82%引き）</td>
+</tr>
+<tr>
+	<td class="nowrap">Azure</td><td class="nowrap"><code>NCads H100 v5</code></td><td class="nowrap">H100 NVL ×1</td>
+	<td class="nowrap">—</td><td class="num">6.98</td><td class="num">—</td>
+	<td>Spotで70〜82%引き、1年予約で約35%引き</td>
+</tr>
+<tr>
+	<td class="nowrap">AWS</td><td class="nowrap"><code>p5.48xlarge</code></td><td class="nowrap">H100 ×8</td>
+	<td class="nowrap">—</td><td class="num">5.191</td><td class="num">—</td>
+	<td>Capacity Blocks時のGPU1枚あたり</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<h2>国内GPUクラウド</h2>
+
+<div class="tablewrap">
+<table>
+<thead>
+<tr>
+	<th class="nowrap">事業者・プラン</th>
+	<th class="nowrap">GPU</th>
+	<th class="nowrap">vCPU / RAM</th>
+	<th class="nowrap">時間単価</th>
+	<th class="nowrap">月額</th>
+	<th>備考</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td class="nowrap">さくら 高火力 DOK</td><td class="nowrap">コンテナ型</td><td class="nowrap">—</td>
+	<td class="num">57.6円〜</td><td class="nowrap">従量</td>
+	<td><strong>0.016円/秒から</strong>。秒課金なので短時間の推論に向く</td>
+</tr>
+<tr>
+	<td class="nowrap">ConoHa GPU L4 エントリー</td><td class="nowrap">L4 24GB</td><td class="nowrap">4 / 16GB</td>
+	<td class="num">55円</td><td class="num">33,000円</td>
+	<td>国内最安クラスのGPU常時起動枠</td>
+</tr>
+<tr>
+	<td class="nowrap">ConoHa GPU L4 高スペック</td><td class="nowrap">L4 24GB</td><td class="nowrap">20 / 128GB</td>
+	<td class="num">140円</td><td class="num">82,000円</td>
+	<td>CPU・メモリも欲しい場合</td>
+</tr>
+<tr>
+	<td class="nowrap">さくら 高火力 VRT（H100）</td><td class="nowrap">H100</td><td class="nowrap">—</td>
+	<td class="num">990円</td><td class="num">385,000円</td>
+	<td>VM型。税込。日額23,100円</td>
+</tr>
+<tr>
+	<td class="nowrap">ConoHa GPU H100</td><td class="nowrap">H100 80GB</td><td class="nowrap">22 / 228GB</td>
+	<td class="num">1,398円</td><td class="num">582,010円</td>
+	<td>税込。利用に審査がある場合あり</td>
+</tr>
+<tr>
+	<td class="nowrap">さくら 高火力 VRT（V100）</td><td class="nowrap">V100</td><td class="nowrap">—</td>
+	<td class="num">481円</td><td class="num">231,000円</td>
+	<td><span class="badge b-ng">終了予定</span>新規受付は2026-12-31、提供終了は2027-03-31</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<h2>H100の時間単価レンジ</h2>
+
+<svg viewBox="0 0 900 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="H100の時間単価比較">
+	<defs>
+		<linearGradient id="g-r03-1a" x1="0" y1="1" x2="0" y2="0">
+			<stop offset="0" stop-color="hsl(140,78%,25%)"/>
+			<stop offset="1" stop-color="hsl(140,58%,55%)"/>
+		</linearGradient>
+		<linearGradient id="g-r03-1b" x1="0" y1="1" x2="0" y2="0">
+			<stop offset="0" stop-color="hsl(40,78%,25%)"/>
+			<stop offset="1" stop-color="hsl(40,58%,55%)"/>
+		</linearGradient>
+		<linearGradient id="g-r03-1c" x1="0" y1="1" x2="0" y2="0">
+			<stop offset="0" stop-color="hsl(0,78%,25%)"/>
+			<stop offset="1" stop-color="hsl(0,58%,55%)"/>
+		</linearGradient>
+	</defs>
+	<rect width="100%" height="100%" fill="#ffffff"/>
+
+	<text x="10" y="22" font-size="14" font-weight="700" fill="#1c2330">NVIDIA H100 の時間単価（GPU 1枚あたり・$）</text>
+	<text x="10" y="42" font-size="11.5" fill="#4a5568">緑＝マーケットプレイス　橙＝GPU専業　赤＝ハイパースケーラー・国内</text>
+
+	<text x="10" y="76" font-size="12.5" fill="#1c2330">Vast.ai</text>
+	<rect x="200" y="62" width="182" height="20" rx="3" fill="url(#g-r03-1a)"/>
+	<text x="390" y="77" font-size="12" fill="#1c2330">$1.89</text>
+
+	<text x="10" y="106" font-size="12.5" fill="#1c2330">RunPod H100 PCIe</text>
+	<rect x="200" y="92" width="278" height="20" rx="3" fill="url(#g-r03-1b)"/>
+	<text x="486" y="107" font-size="12" fill="#1c2330">$2.89</text>
+
+	<text x="10" y="136" font-size="12.5" fill="#1c2330">RunPod H100 SXM</text>
+	<rect x="200" y="122" width="336" height="20" rx="3" fill="url(#g-r03-1b)"/>
+	<text x="544" y="137" font-size="12" fill="#1c2330">$3.49</text>
+
+	<text x="10" y="166" font-size="12.5" fill="#1c2330">Lambda H100 SXM</text>
+	<rect x="200" y="152" width="384" height="20" rx="3" fill="url(#g-r03-1b)"/>
+	<text x="592" y="167" font-size="12" fill="#1c2330">$3.99</text>
+
+	<text x="10" y="196" font-size="12.5" fill="#1c2330">AWS p5（8枚/枚あたり）</text>
+	<rect x="200" y="182" width="500" height="20" rx="3" fill="url(#g-r03-1c)"/>
+	<text x="708" y="197" font-size="12" fill="#1c2330">$5.19</text>
+
+	<text x="10" y="226" font-size="12.5" fill="#1c2330">さくら高火力 VRT</text>
+	<rect x="200" y="212" width="600" height="20" rx="3" fill="url(#g-r03-1c)"/>
+	<text x="700" y="227" font-size="12" fill="#ffffff" font-weight="700">990円（≒$6.23）</text>
+
+	<text x="10" y="254" font-size="11.5" fill="#4a5568">※ さくらは税込・国内DC。Azure NCads H100 v5 は $6.98 でさらに上。</text>
+</svg>
+
+<div class="callout">
+<p><strong>GPUはハイパースケーラーを選ぶ理由が薄い。</strong>H100 でハイパースケーラーは専業の2〜3倍、L4 クラスでも AWS <code>g6.xlarge</code>（東京 $1.167/時）に対し RunPod は $0.49/時 と2倍以上の差がある。既存のVPCやIAMとの統合が要らないなら、RunPod・Vast.ai・Lambda を使うほうが素直に安い。</p>
+</div>
+
+</section>
+
+<section class="ch04" id="ch04">
+<h1>用途別の選び方と注意点</h1>
+
+<h2>目的から逆算した推し順</h2>
+
+<div class="tablewrap">
+<table>
+<thead>
+<tr><th class="nowrap">目的</th><th class="nowrap">推す順</th><th>理由</th></tr>
+</thead>
+<tbody>
+<tr>
+	<td class="nowrap">とにかく無料で常時起動したい</td>
+	<td class="nowrap">Oracle → GCP</td>
+	<td>無期限で使えるのはこの2社だけ。Oracleは半減後でも 2 OCPU/12GB で、GCPの e2-micro（1GB）より格段に大きい</td>
+</tr>
+<tr>
+	<td class="nowrap">32GBを最安で常時起動</td>
+	<td class="nowrap">Hetzner → Lightsail → Vultr</td>
+	<td>Hetznerが使えるなら桁が違う（月5,500〜7,600円）。ただし在庫と値上げのリスクがあるので、Lightsailメモリ最適化（月22,900円）を現実的な次点に置く</td>
+</tr>
+<tr>
+	<td class="nowrap">32GB・国内DC・日本語サポート</td>
+	<td class="nowrap">さくらVPS → ConoHa → さくらのクラウド</td>
+	<td>さくらVPS石狩が26,400円/月（年額なら24,200円相当）でSLA付き。転送量課金がないのも読みやすい。ConoHaは48GBで28,600円と単価では上回る</td>
+</tr>
+<tr>
+	<td class="nowrap">32GB・止まってよいバッチ</td>
+	<td class="nowrap">GCP Spot</td>
+	<td>東京の <code>n2-standard-8</code> が $0.137/時（月15,900円相当）。中断前提の設計が要る</td>
+</tr>
+<tr>
+	<td class="nowrap">32GB・既存AWS/Azure資産と統合</td>
+	<td class="nowrap">AWS r7i.xlarge → GCP e2-standard-8</td>
+	<td>同じ32GBなら4vCPUのメモリ最適化型が最安。CPUを使わない用途なら8vCPUを買う理由がない</td>
+</tr>
+<tr>
+	<td class="nowrap">GPUで学習・推論を回す</td>
+	<td class="nowrap">RunPod → Vast.ai → Lambda</td>
+	<td>秒課金・時間課金で必要なときだけ回せる。Vast.aiは最安だが品質がホスト依存、Lambdaは多枚数構成が取りやすい</td>
+</tr>
+<tr>
+	<td class="nowrap">GPU・国内DC・データを国外に出せない</td>
+	<td class="nowrap">さくら高火力 DOK → ConoHa L4</td>
+	<td>DOKは0.016円/秒の従量で、常時起動が不要なら最も無駄がない。常時起動ならConoHaのL4エントリーが月33,000円</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<h2>比較するときに見落としやすい費用</h2>
+
+<div class="tablewrap">
+<table>
+<thead>
+<tr><th class="nowrap">項目</th><th>内容</th></tr>
+</thead>
+<tbody>
+<tr>
+	<td class="nowrap">ディスク</td>
+	<td>ハイパースケーラーはインスタンス料金に含まれない。100GBのSSDで月$10〜20。VPS系は込みで、さくらVPSは32GBプランに1,600GBが付く</td>
+</tr>
+<tr>
+	<td class="nowrap">データ転送（下り）</td>
+	<td>AWS/GCP/Azureは1GBあたり$0.08〜0.114（東京）。<strong>月1TB出すと約$100=16,000円</strong>で、インスタンス代の3〜4割に達することがある。VPS系は数TBが定額に含まれ、さくらのクラウドは転送量課金そのものがない</td>
+</tr>
+<tr>
+	<td class="nowrap">パブリックIPv4</td>
+	<td>AWSは1個あたり $0.005/時（月約$3.6）。Hetznerも €0.50/月。無料枠内でもIPに課金される場合がある</td>
+</tr>
+<tr>
+	<td class="nowrap">消費税</td>
+	<td>国内事業者の表示は税込が多く、海外事業者は税別表示。海外事業者でもリバースチャージ等で実質10%上乗せになる場合がある</td>
+</tr>
+<tr>
+	<td class="nowrap">為替</td>
+	<td>ドル建て・ユーロ建ては為替で月々の請求が動く。円建て固定の国内VPSは予算が立てやすい</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<h2>この調査で確度が低い部分</h2>
+
+<div class="callout">
+<p><strong>次の3点は公式サイトで直接確認してから発注すること。</strong></p>
+<ul>
+	<li><strong>Hetzner の共有vCPUプラン（CX/CAX）の提供状況</strong>。複数の比較サイトが2026-09-04時点で「新規提供停止」としているが、公式での裏が取れていない。<strong>本調査で最安だった選択肢がここに該当する</strong>ため、影響が大きい</li>
+	<li><strong>ConoHa VPS の長期割引（VPS割引きっぷ）の月額換算</strong>。取得した値に12ヶ月より36ヶ月のほうが高く見える逆転があり、読み取り誤りの可能性がある。通常月額28,600円（48GB）は確度が高い</li>
+	<li><strong>Xserver VPS 32GBプランの新規受付</strong>。2026-07-14にメモリ無料増強が停止され、その後受付停止という記述がある</li>
+</ul>
+</div>
+
+<h3>価格の取得元と時点</h3>
+
+<p>本調査は2026-09-12にWeb上の公開情報から取得した。ハイパースケーラーの単価は第三者の価格データベース（devzero.io / gcloud-compute.com / cloudprice.net）由来で、公式の料金計算ツールと数セント単位でずれる可能性がある。VultrはAPI（<code>api.vultr.com/v2/plans</code>）の生値、さくら・ConoHa・Xserverは各社公式ページ、Oracleの無料枠はOracle公式ドキュメント、AWS/Azure/GCPの無料枠は各社公式ページから取得した。</p>
+
+<pre><code class="language-text">為替の前提（2026年9月初旬）
+  $1 = 159円
+  €1 = 185円
+月額換算の前提
+  ハイパースケーラー: 730時間/月（GCPのN2系は継続利用割引込みの実効値）
+  VPS系: 各社の表示月額をそのまま使用</code></pre>
+
+</section>
+
+</div>
+
+<footer>
+	<p><a class="homelink" href="../" aria-label="親サイトへ戻る"><svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M8 1.6 0.8 7.4h2V14h4v-3.8h2.4V14h4V7.4h2L8 1.6z"/></svg></a></p>
+</footer>
+
+</body>
+</html>
