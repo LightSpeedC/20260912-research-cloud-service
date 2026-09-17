@@ -1,14 +1,26 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 260" width="900" height="260" role="img" aria-label="H100の時間単価比較">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 340" width="900" height="340" role="img" aria-label="メモリ量ごとの月額比較">
 	<defs>
 		<linearGradient id="i1" x1="0" y1="1" x2="0" y2="0">
-			<stop offset="0" stop-color="hsl(140,78%,25%)"/>
-			<stop offset="1" stop-color="hsl(140,58%,55%)"/>
+			<stop offset="0" stop-color="hsl(280,78%,25%)"/>
+			<stop offset="1" stop-color="hsl(280,58%,55%)"/>
 		</linearGradient>
 		<linearGradient id="i2" x1="0" y1="1" x2="0" y2="0">
-			<stop offset="0" stop-color="hsl(40,78%,25%)"/>
-			<stop offset="1" stop-color="hsl(40,58%,55%)"/>
+			<stop offset="0" stop-color="hsl(224,78%,25%)"/>
+			<stop offset="1" stop-color="hsl(224,58%,55%)"/>
 		</linearGradient>
 		<linearGradient id="i3" x1="0" y1="1" x2="0" y2="0">
+			<stop offset="0" stop-color="hsl(168,78%,25%)"/>
+			<stop offset="1" stop-color="hsl(168,58%,55%)"/>
+		</linearGradient>
+		<linearGradient id="i4" x1="0" y1="1" x2="0" y2="0">
+			<stop offset="0" stop-color="hsl(112,78%,25%)"/>
+			<stop offset="1" stop-color="hsl(112,58%,55%)"/>
+		</linearGradient>
+		<linearGradient id="i5" x1="0" y1="1" x2="0" y2="0">
+			<stop offset="0" stop-color="hsl(56,78%,25%)"/>
+			<stop offset="1" stop-color="hsl(56,58%,55%)"/>
+		</linearGradient>
+		<linearGradient id="i6" x1="0" y1="1" x2="0" y2="0">
 			<stop offset="0" stop-color="hsl(0,78%,25%)"/>
 			<stop offset="1" stop-color="hsl(0,58%,55%)"/>
 		</linearGradient>
@@ -16,32 +28,62 @@
 	<rect width="100%" height="100%" fill="#ffffff"/>
 	<rect width="100%" height="100%" fill="#ffffff"/>
 
-	<text x="10" y="22" font-size="14" font-weight="700" fill="#1c2330">NVIDIA H100 の時間単価（GPU 1枚あたり・$）</text>
-	<text x="10" y="42" font-size="11.5" fill="#4a5568">緑＝マーケットプレイス　橙＝GPU専業　赤＝ハイパースケーラー・国内</text>
+	<text x="10" y="22" font-size="14" font-weight="700" fill="#1c2330">同じ事業者でメモリを変えたときの月額（円換算・横幅＝月額）</text>
+	<text x="10" y="42" font-size="11.5" fill="#4a5568">上の2社は12GBも選べる。左端の数字が選んだメモリ量（GB）</text>
 
-	<text x="10" y="76" font-size="12.5" fill="#1c2330">Vast.ai</text>
-	<rect x="200" y="62" width="182" height="20" rx="3" fill="url(#i1)"/>
-	<text x="390" y="77" font-size="12" fill="#1c2330">$1.89</text>
+	<text x="8" y="82" font-size="11" fill="#1c2330">Oracle A1（2 OCPU）</text>
+	<text x="200" y="67" font-size="10" fill="#4a5568" text-anchor="end">12GB</text>
+	<rect x="206" y="58" width="46" height="12" rx="2" fill="url(#i1)"/>
+	<text x="258" y="67" font-size="10" fill="#1c2330">4,411円</text>
+	<text x="200" y="82" font-size="10" fill="#4a5568" text-anchor="end">16GB</text>
+	<rect x="206" y="73" width="53" height="12" rx="2" fill="url(#i1)"/>
+	<text x="265" y="82" font-size="10" fill="#1c2330">5,107円</text>
+	<text x="200" y="97" font-size="10" fill="#4a5568" text-anchor="end">32GB</text>
+	<rect x="206" y="88" width="82" height="12" rx="2" fill="url(#i1)"/>
+	<text x="294" y="97" font-size="10" fill="#1c2330">7,893円</text>
 
-	<text x="10" y="106" font-size="12.5" fill="#1c2330">RunPod H100 PCIe</text>
-	<rect x="200" y="92" width="278" height="20" rx="3" fill="url(#i2)"/>
-	<text x="486" y="107" font-size="12" fill="#1c2330">$2.89</text>
+	<text x="8" y="134" font-size="11" fill="#1c2330">さくらのクラウド 石狩1</text>
+	<text x="200" y="119" font-size="10" fill="#4a5568" text-anchor="end">12GB</text>
+	<rect x="206" y="110" width="113" height="12" rx="2" fill="url(#i2)"/>
+	<text x="325" y="119" font-size="10" fill="#1c2330">10,890円</text>
+	<text x="200" y="134" font-size="10" fill="#4a5568" text-anchor="end">16GB</text>
+	<rect x="206" y="125" width="151" height="12" rx="2" fill="url(#i2)"/>
+	<text x="363" y="134" font-size="10" fill="#1c2330">14,520円</text>
+	<text x="200" y="149" font-size="10" fill="#4a5568" text-anchor="end">32GB</text>
+	<rect x="206" y="140" width="272" height="12" rx="2" fill="url(#i2)"/>
+	<text x="484" y="149" font-size="10" fill="#1c2330">26,070円</text>
 
-	<text x="10" y="136" font-size="12.5" fill="#1c2330">RunPod H100 SXM</text>
-	<rect x="200" y="122" width="336" height="20" rx="3" fill="url(#i2)"/>
-	<text x="544" y="137" font-size="12" fill="#1c2330">$3.49</text>
+	<text x="8" y="179" font-size="11" fill="#1c2330">Hetzner CX43/CX53</text>
+	<text x="200" y="171" font-size="10" fill="#4a5568" text-anchor="end">16GB</text>
+	<rect x="206" y="162" width="31" height="12" rx="2" fill="url(#i3)"/>
+	<text x="243" y="171" font-size="10" fill="#1c2330">2,958円</text>
+	<text x="200" y="186" font-size="10" fill="#4a5568" text-anchor="end">32GB</text>
+	<rect x="206" y="177" width="57" height="12" rx="2" fill="url(#i3)"/>
+	<text x="269" y="186" font-size="10" fill="#1c2330">5,455円</text>
 
-	<text x="10" y="166" font-size="12.5" fill="#1c2330">Lambda H100 SXM</text>
-	<rect x="200" y="152" width="384" height="20" rx="3" fill="url(#i2)"/>
-	<text x="592" y="167" font-size="12" fill="#1c2330">$3.99</text>
+	<text x="8" y="216" font-size="11" fill="#1c2330">さくらのVPS（石狩）</text>
+	<text x="200" y="208" font-size="10" fill="#4a5568" text-anchor="end">16GB</text>
+	<rect x="206" y="199" width="138" height="12" rx="2" fill="url(#i4)"/>
+	<text x="350" y="208" font-size="10" fill="#1c2330">13,200円</text>
+	<text x="200" y="223" font-size="10" fill="#4a5568" text-anchor="end">32GB</text>
+	<rect x="206" y="214" width="275" height="12" rx="2" fill="url(#i4)"/>
+	<text x="487" y="223" font-size="10" fill="#1c2330">26,400円</text>
 
-	<text x="10" y="196" font-size="12.5" fill="#1c2330">AWS p5（8枚/枚あたり）</text>
-	<rect x="200" y="182" width="500" height="20" rx="3" fill="url(#i3)"/>
-	<text x="708" y="197" font-size="12" fill="#1c2330">$5.19</text>
+	<text x="8" y="253" font-size="11" fill="#1c2330">AWS r7i（東京）</text>
+	<text x="200" y="245" font-size="10" fill="#4a5568" text-anchor="end">16GB</text>
+	<rect x="206" y="236" width="194" height="12" rx="2" fill="url(#i5)"/>
+	<text x="406" y="245" font-size="10" fill="#1c2330">18,600円</text>
+	<text x="200" y="260" font-size="10" fill="#4a5568" text-anchor="end">32GB</text>
+	<rect x="206" y="251" width="385" height="12" rx="2" fill="url(#i5)"/>
+	<text x="597" y="260" font-size="10" fill="#1c2330">37,000円</text>
 
-	<text x="10" y="226" font-size="12.5" fill="#1c2330">さくら高火力 VRT</text>
-	<rect x="200" y="212" width="600" height="20" rx="3" fill="url(#i3)"/>
-	<text x="700" y="227" font-size="12" fill="#ffffff" font-weight="700">990円（≒$6.23）</text>
+	<text x="8" y="290" font-size="11" fill="#1c2330">Azure Ds v5（東京）</text>
+	<text x="200" y="282" font-size="10" fill="#4a5568" text-anchor="end">16GB</text>
+	<rect x="206" y="273" width="300" height="12" rx="2" fill="url(#i6)"/>
+	<text x="512" y="282" font-size="10" fill="#1c2330">28,800円</text>
+	<text x="200" y="297" font-size="10" fill="#4a5568" text-anchor="end">32GB</text>
+	<rect x="206" y="288" width="600" height="12" rx="2" fill="url(#i6)"/>
+	<text x="812" y="297" font-size="10" fill="#1c2330">57,600円</text>
 
-	<text x="10" y="254" font-size="11.5" fill="#4a5568">※ さくらは税込・国内DC。Azure NCads H100 v5 は $6.98 でさらに上。</text>
+	<text x="8" y="322" font-size="11.5" fill="#4a5568">※ Oracle・さくらのクラウド・AWS・Azure はディスク代が別に乗る。Hetzner・さくらのVPS は込み。</text>
 </svg>
